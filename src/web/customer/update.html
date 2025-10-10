@@ -9,10 +9,75 @@
 </head>
 <body>
     <div class="container mt-5">
-        <!-- ここにHTMLを書く -->
+        <h2 class="mb-4">顧客情報の編集</h2>
+    <form id="update-form">
+      <div class="form-group">
+        <label for="companyName">会社名:</label>
+        <input type="text" class="form-control" id="companyName" name="companyName" required>
+      </div>
+      <div class="form-group">
+        <label for="industry">業種:</label>
+        <input type="text" class="form-control" id="industry" name="industry" required>
+      </div>
+      <div class="form-group">
+        <label for="contact">連絡先:</label>
+        <input type="text" class="form-control" id="contact" name="contact" required>
+      </div>
+      <div class="form-group">
+        <label for="location">所在地:</label>
+        <input type="text" class="form-control" id="location" name="location" required>
+      </div>
+      <button type="submit" class="btn btn-primary">保存する</button>
+      <a href="list.html" class="btn btn-secondary ml-2">キャンセル</a>
+    </form>
+
     </div>
     <script type="module">
-        <!-- ここにJSを書く -->
+        import config from '/config.js';
+
+    const params = new URLSearchParams(window.location.search);
+    const contact = params.get('contact');
+
+    // 顧客情報の取得
+    fetch(`${config.apiUrl}/customer/${encodeURIComponent(contact)}`)
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById('companyName').value = data.company_name;
+        document.getElementById('industry').value = data.industry;
+        document.getElementById('contact').value = data.contact;
+        document.getElementById('location').value = data.location;
+      })
+      .catch(err => {
+        console.error(err);
+        alert('顧客情報の取得に失敗しました。');
+      });
+
+    // 保存処理
+    document.getElementById('update-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const formData = new FormData(this);
+      fetch(`${config.apiUrl}/update-customer`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: new URLSearchParams([...formData])
+      })
+      .then(res => res.json())
+      .then(result => {
+        if (result.success) {
+          alert('更新が完了しました！');
+          window.location.href = 'list.html';
+        } else {
+          alert('更新に失敗しました。');
+        }
+      })
+      .catch(err => {
+        console.error(err);
+        alert('通信エラーが発生しました。');
+      });
+    });
+
     </script>
     <!-- BootstrapのJavaScriptの読み込み -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>

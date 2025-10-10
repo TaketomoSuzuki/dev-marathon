@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <title>顧客詳細</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+</head>
+<body>
+  <div class="container mt-5">
+    <h2 class="mb-4">顧客詳細情報</h2>
+    <table class="table table-bordered">
+      <tbody id="detail-table"></tbody>
+    </table>
+    <a href="list.html" class="btn btn-secondary mt-4">一覧に戻る</a>
+    <a id="edit-link" class="btn btn-warning ml-2">編集する</a>
+    <button id="delete-btn" class="btn btn-danger ml-2">削除する</button>
+  </div>
+
+  <script type="module">
+    import config from '/config.js';
+
+    const params = new URLSearchParams(window.location.search);
+    const contact = params.get('contact');
+
+    fetch(`${config.apiUrl}/customer/${encodeURIComponent(contact)}`)
+      .then(res => res.json())
+      .then(data => {
+        const table = document.getElementById('detail-table');
+
+        const fields = [
+          { label: 'Company_name', value: data.company_name },
+          { label: 'industry', value: data.industry },
+          { label: 'Contact', value: data.contact },
+          { label: 'location', value: data.location }
+        ];
+
+        fields.forEach(field => {
+          const row = document.createElement('tr');
+          row.innerHTML = `<th>${field.label}</th><td>${field.value}</td>`;
+          table.appendChild(row);
+        });
+
+        // 編集リンクに contact を付加
+        document.getElementById('edit-link').href = `update.html?contact=${encodeURIComponent(data.contact)}`;
+      
+      })
+      .catch(err => {
+        console.error(err);
+        alert('詳細情報の取得に失敗しました。');
+      });
+
+      // 削除ボタンの処理
+    document.getElementById('delete-btn').addEventListener('click', () => {
+  alert('削除していいですか？'); // 指示通り alert を表示
+
+  // 削除処理を続けて実行
+  fetch(`${config.apiUrl}/customer/${encodeURIComponent(contact)}`, {
+    method: 'DELETE'
+  })
+  .then(res => res.json())
+  .then(result => {
+    if (result.success) {
+      alert('削除が完了しました。');
+      window.location.href = 'list.html';
+    } else {
+      alert('削除に失敗しました。');
+    }
+  })
+  .catch(err => {
+    console.error(err);
+    alert('通信エラーが発生しました。');
+  });
+});
+
+
+  </script>
+</body>
+</html>
+

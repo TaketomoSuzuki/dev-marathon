@@ -3,16 +3,60 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>案件情報入力</title>
+    <title>顧客情報確認</title>
     <!-- Bootstrap CSSの読み込み -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 </head>
 <body>
     <div class="container mt-5">
         <!-- ここにHTMLを書く -->
+        <h2 class="mb-4">入力内容の確認</h2>
+        <ul class="list-group mb-4" id="confirm-list"></ul>
+        <button id="save-btn" class="btn btn-success mr-2">保存する</button>
+        <button id="back-btn" class="btn btn-secondary">戻る</button>
+  
     </div>
     <script type="module">
-        <!-- ここにJSを書く -->
+        import config from '/config.js';
+
+        const params = new URLSearchParams(window.location.search);
+        const data = Object.fromEntries(params.entries());
+
+        const list = document.getElementById('confirm-list');
+        for (const [key, value] of Object.entries(data)) {
+        const item = document.createElement('li');
+        item.className = 'list-group-item';
+        item.textContent = `${key}: ${value}`;
+        list.appendChild(item);
+        }
+
+        document.getElementById('save-btn').addEventListener('click', () => {
+        fetch(`${config.apiUrl}/add-customer`, {
+            method: 'POST',
+            headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: new URLSearchParams(data)
+        })
+        .then(res => res.json())
+        .then(result => {
+            if (result.success) {
+            alert('保存が完了しました！');
+            window.location.href = 'list.html';
+            } else {
+            alert('保存に失敗しました。');
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            alert('通信エラーが発生しました。');
+        });
+        });
+
+        document.getElementById('back-btn').addEventListener('click', () => {
+        window.history.back(); // または window.location.href = 'add.html';
+        });
+
     </script>
     <!-- BootstrapのJavaScriptの読み込み -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>

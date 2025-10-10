@@ -3,7 +3,7 @@ services:
     container_name: nginx
     image: nginx:stable-bullseye
     ports:
-      - "80:80"
+      - "8081:80"
     volumes:
       - ./src/web:/usr/share/nginx/html
       - ./work:/work
@@ -14,7 +14,7 @@ services:
     container_name: nodejs
     image: node:22-bullseye
     ports:
-      - "1985:1985"
+      - "5225:5225"
     volumes:
       - ./src/node:/app
       - ./work:/work
@@ -32,7 +32,7 @@ services:
       timeout: 5s
       retries: 3
     volumes:
-      - ./db:/var/lib/postgresql/data
+      - /home/taketomo/postgres-data:/var/lib/postgresql/data
       - ./work:/work
     working_dir: /work
     environment:
@@ -42,6 +42,7 @@ services:
       POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
     env_file:
       - .env
+
 
   pgadmin:
     container_name: pgadmin
