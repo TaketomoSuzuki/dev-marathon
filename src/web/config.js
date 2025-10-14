@@ -1,5 +1,5 @@
 const config = {
-  apiUrl: 'http://localhost:5225'
+  apiUrl: '/api_taketomo_suzuki'
 };
 
 export default config;
