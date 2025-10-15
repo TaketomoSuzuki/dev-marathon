@@ -9,13 +9,24 @@ const port = 5225;
 const cors = require("cors");
 app.use(cors());
 
+// ✅ dotenv を使って環境ごとの .env を読み込む
+const dotenv = require("dotenv");
+const envPath =
+  process.env.NODE_ENV === "production"
+    ? "/app/taketomo_suzuki/.env.production"
+    : process.env.NODE_ENV === "staging"
+    ? "/app/taketomo_suzuki/.env.staging"
+    : ".env";
+dotenv.config({ path: envPath });
+
+// ✅ PostgreSQL接続情報を .env から取得
 const { Pool } = require("pg");
 const pool = new Pool({
-  user: "user_taketomo_suzuki", // PostgreSQLのユーザー名に置き換えてください
-  host: "localhost",
-  database: "db_taketomo_suzuki", // PostgreSQLのデータベース名に置き換えてください
-  password: "pass", // PostgreSQLのパスワードに置き換えてください
-  port: 5432,
+  user: process.env.PGUSER,
+  host: process.env.PGHOST,
+  database: process.env.PGDATABASE,
+  password: process.env.PGPASSWORD,
+  port: process.env.PGPORT,
 });
 
 app.listen(port, () => {
