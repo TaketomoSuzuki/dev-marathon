@@ -25,7 +25,7 @@ jobs:
             bash /app/taketomo_suzuki/deploy.sh taketomo_suzuki  
 
             # Cypressテスト実行
-            cd ~/ci
-            npx cypress run --browser chrome --spec "cypress/e2e/taketomo_suzuki.*"
-            
+            cd /ci/cypress/e2e/
+            npx cypress run --browser chrome --spec "/ci/cypress/e2e/taketomo_suzuki.*"
+
 
