@@ -14,7 +14,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: SSH into Staging and Deploy
+      - name: SSH into Staging and Deploy & Test
         uses: appleboy/ssh-action@v0.1.10
         with:
           host: ${{ secrets.DEV_SSH_HOST }}
@@ -26,12 +26,9 @@ jobs:
             git reset --hard origin/main
             export NODE_ENV=staging
             bash deploy.sh taketomo_suzuki
-
-      - name: Run Cypress Tests
-        uses: cypress-io/github-action@v6
-        with:
-          working-directory: src/node
-          start: npm run dev
-          wait-on: http://localhost:5225
-          spec: ../../../../ci/cypress/e2e/taketomo_suzuki.cy.js
+            cd src/node
+            npm ci
+            npm run dev &
+            npx wait-on http://localhost:5225 --timeout 60000
+            npx cypress run --spec ../../../../ci/cypress/e2e/taketomo_suzuki.cy.js
 
