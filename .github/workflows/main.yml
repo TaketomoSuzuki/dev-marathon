@@ -17,9 +17,9 @@ jobs:
       - name: SSH into Staging and Deploy
         uses: appleboy/ssh-action@v0.1.10
         with:
-          host: ${{ secrets.STAGING_SSH_HOST }}
-          username: ${{ secrets.STAGING_SSH_USER }}
-          key: ${{ secrets.STAGING_SSH_KEY }}
+          host: ${{ secrets.DEV_SSH_HOST }}
+          username: ${{ secrets.DEV_SSH_USER }}
+          key: ${{ secrets.DEV_SSH_KEY }}
           script: |
             cd /app/taketomo_suzuki
             git fetch origin
