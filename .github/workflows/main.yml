@@ -25,6 +25,7 @@ jobs:
             bash /app/taketomo_suzuki/deploy.sh taketomo_suzuki  
 
             cd /app/taketomo_suzuki/src/node
+            fuser -k 5225/tcp || true
             npm run dev &
 
             # Cypressテスト実行
