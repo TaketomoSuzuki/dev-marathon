@@ -1,4 +1,4 @@
-name: ssh command
+name: CI/CD Pipeline
 
 on:
   push:
@@ -6,18 +6,31 @@ on:
       - main
 
 jobs:
-  deploy:
+  test-on-staging:
+    name: Deploy & Test on Staging
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Execute remote SSH command
+      - name: SSH into Staging and Deploy
         uses: appleboy/ssh-action@v0.1.10
         with:
-          host: ${{ secrets.DEV_SSH_HOST }}
-          username: ${{ secrets.DEV_SSH_USER }}
-          key: ${{ secrets.DEV_SSH_KEY }}
-          port: ${{ secrets.DEV_SSH_PORT }}
-          script: bash /app/taketomo_suzuki/deploy.sh taketomo_suzuki
+          host: ${{ secrets.STAGING_SSH_HOST }}
+          username: ${{ secrets.STAGING_SSH_USER }}
+          key: ${{ secrets.STAGING_SSH_KEY }}
+          script: |
+            cd /app/taketomo_suzuki
+            git fetch origin
+            git reset --hard origin/main
+            export NODE_ENV=staging
+            bash deploy.sh taketomo_suzuki
+
+      - name: Run Cypress Tests
+        uses: cypress-io/github-action@v6
+        with:
+          start: npm run dev
+          wait-on: http://localhost:5225
+          spec: cypress/e2e/taketomo_suzuki.cy.js
 
