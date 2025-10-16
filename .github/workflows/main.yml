@@ -35,6 +35,10 @@ jobs:
             # サーバー停止
             
   deploy-production:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+
+    steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
