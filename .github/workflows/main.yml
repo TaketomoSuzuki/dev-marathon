@@ -32,6 +32,10 @@ jobs:
             cd /ci
             npx cypress run --browser chrome --spec "cypress/e2e/taketomo_suzuki.*"
 
+            # サーバー停止
+            kill $NODE_PID
+
+
   deploy-production:
     name: Deploy to Production
     runs-on: ubuntu-latest
