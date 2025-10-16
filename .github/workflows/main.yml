@@ -20,15 +20,7 @@ jobs:
           host: ${{ secrets.DEV_SSH_HOST }}
           username: ${{ secrets.DEV_SSH_USER }}
           key: ${{ secrets.DEV_SSH_KEY }}
-          script: |
-            cd /app/taketomo_suzuki
-            git fetch origin
-            git reset --hard origin/main
-            export NODE_ENV=staging
-            bash deploy.sh taketomo_suzuki
-            cd src/node
-            npm ci
-            npm run dev &
-            npx wait-on http://localhost:5225 --timeout 60000
-            npx cypress run --spec ../../../../ci/cypress/e2e/taketomo_suzuki.cy.js
+          port: ${{ secrets.DEV_SSH_PORT }}
+          script: bash /app/taketomo_suzuki/deploy.sh taketomo_suzuki
+            
 
