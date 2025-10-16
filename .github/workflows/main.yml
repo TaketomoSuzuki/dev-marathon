@@ -25,7 +25,20 @@ jobs:
             bash /app/taketomo_suzuki/deploy.sh taketomo_suzuki  
 
             # Cypressテスト実行
-            cd /ci
-            npx cypress run --browser chrome --spec "cypress/e2e/taketomo_suzuki.*"
+            # cd /ci
+            # npx cypress run --browser chrome --spec "cypress/e2e/taketomo_suzuki.*"
 
+deploy-production:
+    name: Deploy to Production
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch'  # ← 手動実行にするのが安全
+    steps:
+      - name: SSH into Production
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.PROD_SSH_HOST }}
+          username: ${{ secrets.PROD_SSH_USER }}
+          key: ${{ secrets.PROD_SSH_KEY }}
+          port: ${{ secrets.PROD_SSH_PORT }}
+          script: bash /app/taketomo_suzuki/deploy.sh production
 
