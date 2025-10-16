@@ -43,9 +43,9 @@ jobs:
       - name: SSH into Production
         uses: appleboy/ssh-action@v0.1.10
         with:
-          host: ${{ secrets.PROD_SSH_HOST }}
-          username: ${{ secrets.PROD_SSH_USER }}
-          key: ${{ secrets.PROD_SSH_KEY }}
-          port: ${{ secrets.PROD_SSH_PORT }}
+          host: ${{ secrets.dev_SSH_HOST }}
+          username: ${{ secrets.dev_SSH_USER }}
+          key: ${{ secrets.dev_SSH_KEY }}
+          port: ${{ secrets.dev_SSH_PORT }}
           script: bash /app/taketomo_suzuki/deploy.sh production
 
