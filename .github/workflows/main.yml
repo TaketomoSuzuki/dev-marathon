@@ -24,16 +24,16 @@ jobs:
           script: |
             bash /app/taketomo_suzuki/deploy.sh taketomo_suzuki  
 
-            cd /app/taketomo_suzuki/src/node
-            fuser -k 5225/tcp || true
-            npm run dev &
+            # cd /app/taketomo_suzuki/src/node
+            # fuser -k 5225/tcp || true
+            # npm run dev &
 
             # Cypressテスト実行
             cd /ci
             npx cypress run --browser chrome --spec "cypress/e2e/taketomo_suzuki.*"
 
             # サーバー停止
-            kill $(lsof -t -i:5225) || true
+            
 
 
   deploy-production:
