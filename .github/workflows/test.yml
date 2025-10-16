@@ -15,8 +15,8 @@ jobs:
       - name: Execute remote SSH command
         uses: appleboy/ssh-action@v0.1.10
         with:
-          host: ${{ secrets.prod_SSH_HOST }}
-          username: ${{ secrets.prod_SSH_USER }}
-          key: ${{ secrets.prod_SSH_KEY }}
-          port: ${{ secrets.prod_SSH_PORT }}
+          host: ${{ secrets.PROD_SSH_HOST }}
+          username: ${{ secrets.PROD_SSH_USER }}
+          key: ${{ secrets.PROD_SSH_KEY }}
+          port: ${{ secrets.PROD_SSH_PORT }}
           script: bash /app/taketomo_suzuki/deploy.sh taketomo_suzuki
