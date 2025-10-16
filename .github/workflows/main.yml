@@ -30,7 +30,8 @@ jobs:
       - name: Run Cypress Tests
         uses: cypress-io/github-action@v6
         with:
+          working-directory: src/node
           start: npm run dev
           wait-on: http://localhost:5225
-          spec: ci/cypress/e2e/taketomo_suzuki.cy.js
+          spec: ../../../../ci/cypress/e2e/taketomo_suzuki.cy.js
 
