@@ -21,6 +21,9 @@ jobs:
           username: ${{ secrets.DEV_SSH_USER }}
           key: ${{ secrets.DEV_SSH_KEY }}
           port: ${{ secrets.DEV_SSH_PORT }}
-          script: bash /app/taketomo_suzuki/deploy.sh taketomo_suzuki
-            
+          script: |
+            bash /app/taketomo_suzuki/deploy.sh taketomo_suzuki  
+
+            # Cypressテスト実行
+            npx cypress run --spec /ci/cypress/e2e/taketomo_suzuki.cy.js
 
