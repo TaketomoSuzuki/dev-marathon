@@ -33,7 +33,7 @@ jobs:
             npx cypress run --browser chrome --spec "cypress/e2e/taketomo_suzuki.*"
 
             # サーバー停止
-            kill $NODE_PID
+            pkill -f "node index.js"
 
 
   deploy-production:
