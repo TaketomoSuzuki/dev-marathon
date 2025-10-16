@@ -34,8 +34,6 @@ jobs:
 
             # サーバー停止
             
-
-
   deploy-production:
       - name: Checkout code
         uses: actions/checkout@v3
