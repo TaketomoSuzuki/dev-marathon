@@ -24,11 +24,14 @@ jobs:
           script: |
             bash /app/taketomo_suzuki/deploy.sh taketomo_suzuki  
 
-            # Cypressテスト実行
-            # cd /ci
-            # npx cypress run --browser chrome --spec "cypress/e2e/taketomo_suzuki.*"
+            cd /app/taketomo_suzuki/src/node
+            npm run dev &
 
-deploy-production:
+            # Cypressテスト実行
+            cd /ci
+            npx cypress run --browser chrome --spec "cypress/e2e/taketomo_suzuki.*"
+
+  deploy-production:
     name: Deploy to Production
     runs-on: ubuntu-latest
     if: github.event_name == 'workflow_dispatch'  # ← 手動実行にするのが安全
