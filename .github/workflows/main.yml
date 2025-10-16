@@ -47,5 +47,5 @@ jobs:
           username: ${{ secrets.dev_SSH_USER }}
           key: ${{ secrets.dev_SSH_KEY }}
           port: ${{ secrets.dev_SSH_PORT }}
-          script: bash /app/taketomo_suzuki/deploy.sh production
+          script: bash /app/taketomo_suzuki/deploy.sh taketomo_suzuki
 
