@@ -98,5 +98,34 @@ app.post("/update-customer", async (req, res) => {
 });
 
 
+// 案件登録API
+app.post('/api_taketomo_suzuki/case', async (req, res) => {
+  try {
+    const {
+      case_name,
+      case_status,
+      expected_revenue,
+      representative,
+      customer_id
+    } = req.body;
+
+    const query = `
+      INSERT INTO cases (case_name, case_status, expected_revenue, representative, customer_id)
+      VALUES ($1, $2, $3, $4, $5)
+      RETURNING case_id
+    `;
+    const values = [case_name, case_status, expected_revenue, representative, customer_id];
+
+    const result = await pool.query(query, values);
+    res.json({ success: true, case_id: result.rows[0].case_id });
+  } catch (err) {
+    console.error('案件登録エラー:', err);
+    res.status(500).json({ success: false, error: '案件登録に失敗しました' });
+  }
+});
+
+
+
+
 
 
