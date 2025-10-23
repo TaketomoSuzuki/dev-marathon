@@ -1,80 +1,84 @@
 <!DOCTYPE html>
 <html lang="ja">
-<head>
-  <meta charset="UTF-8" />
-  <title>顧客詳細</title>
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-</head>
-<body>
-<form id="case-form" class="mt-4">
-  <div class="form-group">
-    <label for="title">案件タイトル</label>
-    <input type="text" class="form-control" id="title" required />
-  </div>
-  <div class="form-group">
-    <label for="description">案件内容</label>
-    <textarea class="form-control" id="description" rows="3" required></textarea>
-  </div>
-  <div class="form-group">
-    <label for="status">ステータス</label>
-    <select class="form-control" id="status" required></select>
-  </div>
-  <button type="submit" class="btn btn-primary">登録</button>
-</form>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>案件登録</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  </head>
+  <body>
+    <div class="container mt-5">
+      <h2 class="mb-4">案件登録フォーム</h2>
+      <form id="case-form">
+        <div class="form-group">
+          <label for="case_name">案件タイトル</label>
+          <input type="text" class="form-control" id="case_name" required />
+        </div>
+        <div class="form-group">
+          <label for="description">案件内容</label>
+          <textarea class="form-control" id="description" rows="3" required></textarea>
+        </div>
+        <div class="form-group">
+          <label for="case_status">ステータス</label>
+          <select class="form-control" id="case_status" required>
+            <option value="新規">新規</option>
+            <option value="交渉中">交渉中</option>
+            <option value="契約締結">契約締結</option>
+            <option value="失注">失注</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="expected_revenue">予想売上（円）</label>
+          <input type="number" class="form-control" id="expected_revenue" min="0" step="0.01" />
+        </div>
+        <div class="form-group">
+          <label for="representative">担当者名</label>
+          <input type="text" class="form-control" id="representative" required />
+        </div>
+        <button type="submit" class="btn btn-primary">登録</button>
+      </form>
+    </div>
 
-<script type="module">
+    <script type="module">
+      import config from '/taketomo_suzuki/config.js';
 
-    import config from '/taketomo_suzuki/config.js';
+      const params = new URLSearchParams(window.location.search);
+      const contact = params.get('contact');
 
-    const params = new URLSearchParams(window.location.search);
-    const contact = params.get('contact');
+      document.getElementById('case-form').addEventListener('submit', e => {
+        e.preventDefault();
 
-    // ステータス一覧取得
-    fetch(`${config.apiUrl}/case-status`)
-    .then(res => res.json())
-    .then(statusList => {
-        const statusSelect = document.getElementById('status');
-        statusList.forEach(status => {
-        const option = document.createElement('option');
-        option.value = status.id;
-        option.textContent = status.name;
-        statusSelect.appendChild(option);
-        });
-    });
+        const payload = {
+          case_name: document.getElementById('case_name').value,
+          case_status: document.getElementById('case_status').value,
+          expected_revenue: document.getElementById('expected_revenue').value || null,
+          representative: document.getElementById('representative').value,
+          customer_id: parseInt(contact)
+        };
 
-    // 登録処理
-    document.getElementById('case-form').addEventListener('submit', e => {
-    e.preventDefault();
-    const payload = {
-        title: document.getElementById('title').value,
-        description: document.getElementById('description').value,
-        status_id: document.getElementById('status').value,
-        contact: contact
-    };
-
-    fetch(`${config.apiUrl}/case`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-    })
+        fetch(`${config.apiUrl}/case`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        })
         .then(res => res.json())
         .then(result => {
-        if (result.success) {
+          if (result.success) {
             alert('案件を登録しました');
             window.location.href = `detail.html?contact=${encodeURIComponent(contact)}`;
-        } else {
+          } else {
             alert('登録に失敗しました');
-        }
+          }
         })
         .catch(err => {
-        console.error(err);
-        alert('通信エラーが発生しました');
+          console.error(err);
+          alert('通信エラーが発生しました');
         });
-    });
+      });
+    </script>
 
-</script>
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-</body>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  </body>
 </html>
