@@ -1,0 +1,68 @@
+<form id="case-form" class="mt-4">
+  <div class="form-group">
+    <label for="title">案件タイトル</label>
+    <input type="text" class="form-control" id="title" required />
+  </div>
+  <div class="form-group">
+    <label for="description">案件内容</label>
+    <textarea class="form-control" id="description" rows="3" required></textarea>
+  </div>
+  <div class="form-group">
+    <label for="status">ステータス</label>
+    <select class="form-control" id="status" required></select>
+  </div>
+  <button type="submit" class="btn btn-primary">登録</button>
+</form>
+
+
+<script type="module">
+
+    import config from '/taketomo_suzuki/config.js';
+
+    const params = new URLSearchParams(window.location.search);
+    const contact = params.get('contact');
+
+    // ステータス一覧取得
+    fetch(`${config.apiUrl}/case-status`)
+    .then(res => res.json())
+    .then(statusList => {
+        const statusSelect = document.getElementById('status');
+        statusList.forEach(status => {
+        const option = document.createElement('option');
+        option.value = status.id;
+        option.textContent = status.name;
+        statusSelect.appendChild(option);
+        });
+    });
+
+    // 登録処理
+    document.getElementById('case-form').addEventListener('submit', e => {
+    e.preventDefault();
+    const payload = {
+        title: document.getElementById('title').value,
+        description: document.getElementById('description').value,
+        status_id: document.getElementById('status').value,
+        contact: contact
+    };
+
+    fetch(`${config.apiUrl}/case`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+    })
+        .then(res => res.json())
+        .then(result => {
+        if (result.success) {
+            alert('案件を登録しました');
+            window.location.href = `detail.html?contact=${encodeURIComponent(contact)}`;
+        } else {
+            alert('登録に失敗しました');
+        }
+        })
+        .catch(err => {
+        console.error(err);
+        alert('通信エラーが発生しました');
+        });
+    });
+
+</script>

@@ -14,6 +14,7 @@
     <a href="list.html" class="btn btn-secondary mt-4">一覧に戻る</a>
     <a id="edit-link" class="btn btn-warning ml-2">編集する</a>
     <button id="delete-btn" class="btn btn-danger ml-2">削除する</button>
+    <a id="add-case-link" class="btn btn-success ml-2">案件を登録</a>
   </div>
 
   <script type="module">
@@ -42,6 +43,9 @@
 
         // 編集リンクに contact を付加
         document.getElementById('edit-link').href = `update.html?contact=${encodeURIComponent(data.contact)}`;
+        // 案件登録画面に遷移
+        document.getElementById('add-case-link').href = `case_register.html?contact=${encodeURIComponent(contact)}`;
+
       
       })
       .catch(err => {
