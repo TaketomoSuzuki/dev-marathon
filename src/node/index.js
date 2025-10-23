@@ -101,28 +101,35 @@ app.post("/update-customer", async (req, res) => {
 // 案件登録API
 app.post('/case', async (req, res) => {
   try {
-    const {
-      case_name,
-      case_status,
-      expected_revenue,
-      representative,
-      customer_id
-    } = req.body;
+    const { contact, case_name, case_status, expected_revenue, representative } = req.body;
 
-    const query = `
-      INSERT INTO cases (case_name, case_status, expected_revenue, representative, customer_id)
-      VALUES ($1, $2, $3, $4, $5)
-      RETURNING case_id
-    `;
-    const values = [case_name, case_status, expected_revenue, representative, customer_id];
+    const customerResult = await pool.query(
+      'SELECT customer_id FROM customers WHERE contact = $1',
+      [contact]
+    );
 
-    const result = await pool.query(query, values);
+    if (!customerResult.rows.length || !customerResult.rows[0].customer_id) {
+      console.warn('顧客が見つかりません:', contact);
+      return res.status(404).json({ success: false, error: '顧客が見つかりません' });
+    }
+
+    const customer_id = customerResult.rows[0].customer_id;
+    console.log('取得した customer_id:', customer_id);
+
+    const result = await pool.query(
+      `INSERT INTO cases (case_name, case_status, expected_revenue, representative, customer_id)
+       VALUES ($1, $2, $3, $4, $5)
+       RETURNING case_id`,
+      [case_name, case_status, expected_revenue, representative, customer_id]
+    );
+
     res.json({ success: true, case_id: result.rows[0].case_id });
   } catch (err) {
     console.error('案件登録エラー:', err);
     res.status(500).json({ success: false, error: '案件登録に失敗しました' });
   }
 });
+
 
 
 

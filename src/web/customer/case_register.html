@@ -40,7 +40,7 @@
     </div>
 
     <script type="module">
-      import config from '/taketomo_suzuki/config.js';
+      import config from '/config.js';
 
       const params = new URLSearchParams(window.location.search);
       const contact = params.get('contact');
@@ -53,7 +53,7 @@
           case_status: document.getElementById('case_status').value,
           expected_revenue: document.getElementById('expected_revenue').value || null,
           representative: document.getElementById('representative').value,
-          customer_id: parseInt(contact)
+          contact: contact
         };
 
         fetch(`${config.apiUrl}/case`, {
