@@ -99,7 +99,7 @@ app.post("/update-customer", async (req, res) => {
 
 
 // 案件登録API
-app.post('/api_taketomo_suzuki/case', async (req, res) => {
+app.post('/case', async (req, res) => {
   try {
     const {
       case_name,
