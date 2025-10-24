@@ -36,16 +36,24 @@
         import config from '../config.js';
 
     const params = new URLSearchParams(window.location.search);
-    const contact = params.get('contact');
+    const customer_id = params.get('customer_id');
 
     // 顧客情報の取得
-    fetch(`${config.apiUrl}/customer/${encodeURIComponent(contact)}`)
+    fetch(`${config.apiUrl}/customer/${encodeURIComponent(customer_id)}`)
       .then(res => res.json())
       .then(data => {
         document.getElementById('companyName').value = data.company_name;
         document.getElementById('industry').value = data.industry;
         document.getElementById('contact').value = data.contact;
         document.getElementById('location').value = data.location;
+
+        // hiddenでcustomer_idを保持
+        const hiddenInput = document.createElement('input');
+        hiddenInput.type = 'hidden';
+        hiddenInput.name = 'customer_id';
+        hiddenInput.value = data.customer_id;
+        document.getElementById('update-form').appendChild(hiddenInput);
+
       })
       .catch(err => {
         console.error(err);

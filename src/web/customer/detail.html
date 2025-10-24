@@ -21,9 +21,9 @@
     import config from '/taketomo_suzuki/config.js';
 
     const params = new URLSearchParams(window.location.search);
-    const contact = params.get('contact');
+    const customer_id = params.get('customer_id');
 
-    fetch(`${config.apiUrl}/customer/${encodeURIComponent(contact)}`)
+    fetch(`${config.apiUrl}/customer/${encodeURIComponent(customer_id)}`)
       .then(res => res.json())
       .then(data => {
         const table = document.getElementById('detail-table');
@@ -42,9 +42,9 @@
         });
 
         // 編集リンクに contact を付加
-        document.getElementById('edit-link').href = `update.html?contact=${encodeURIComponent(data.contact)}`;
+        document.getElementById('edit-link').href = `update.html?customer_id=${encodeURIComponent(data.customer_id)}`;
         // 案件登録画面に遷移
-        document.getElementById('add-case-link').href = `case_register.html?contact=${encodeURIComponent(contact)}`;
+        document.getElementById('add-case-link').href = `case_register.html?customer_id=${encodeURIComponent(customer_id)}`;
 
       
       })
@@ -58,7 +58,7 @@
   alert('削除していいですか？'); // 指示通り alert を表示
 
   // 削除処理を続けて実行
-  fetch(`${config.apiUrl}/customer/${encodeURIComponent(contact)}`, {
+  fetch(`${config.apiUrl}/customer/${encodeURIComponent(customer_id)}`, {
     method: 'DELETE'
   })
   .then(res => res.json())

@@ -57,8 +57,8 @@ app.post("/add-customer", async (req, res) => {
   }
 });
 
-app.get("/customer/:contact", async (req, res) => {
-  const contact = req.params.contact;
+app.get("/customer/:customer_id", async (req, res) => {
+  const customer_id = req.params.customer_id;
   try {
     const result = await pool.query("SELECT * FROM customers WHERE contact = $1", [contact]);
     if (result.rows.length > 0) {
@@ -72,10 +72,10 @@ app.get("/customer/:contact", async (req, res) => {
   }
 });
 
-app.delete("/customer/:contact", async (req, res) => {
-  const contact = req.params.contact;
+app.delete("/customer/:customer_id", async (req, res) => {
+  const customer_id = req.params.customer_id;
   try {
-    await pool.query("DELETE FROM customers WHERE contact = $1", [contact]);
+    await pool.query("DELETE FROM customers WHERE customer_id = $1", [customer_id]);
     res.json({ success: true });
   } catch (err) {
     console.error(err);
@@ -84,11 +84,11 @@ app.delete("/customer/:contact", async (req, res) => {
 });
 
 app.post("/update-customer", async (req, res) => {
-  const { companyName, industry, contact, location } = req.body;
+  const { companyName, industry, contact, location, customer_id } = req.body;
   try {
     await pool.query(
-      "UPDATE customers SET company_name = $1, industry = $2, location = $3 WHERE contact = $4",
-      [companyName, industry, location, contact]
+      "UPDATE customers SET company_name = $1, industry = $2, contact = $3 location = $4 WHERE customer_id = $5",
+      [companyName, industry, location, contact, customer_id]
     );
     res.json({ success: true });
   } catch (err) {
