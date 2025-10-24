@@ -58,19 +58,24 @@ app.post("/add-customer", async (req, res) => {
 });
 
 app.get("/customer/:customer_id", async (req, res) => {
-  const customer_id = req.params.customer_id;
+  const customer_id = parseInt(req.params.customer_id, 10);
+  if (isNaN(customer_id)) {
+    return res.status(400).json({ error: "customer_id が不正です" });
+  }
+
   try {
-    const result = await pool.query("SELECT * FROM customers WHERE contact = $1", [contact]);
+    const result = await pool.query("SELECT * FROM customers WHERE customer_id = $1", [customer_id]);
     if (result.rows.length > 0) {
       res.json(result.rows[0]);
     } else {
       res.status(404).json({ error: "顧客が見つかりませんでした" });
     }
   } catch (err) {
-    console.error(err);
+    console.error("顧客取得エラー:", err); // ← ここでエラー内容を確認できる
     res.status(500).json({ error: "サーバーエラー" });
   }
 });
+
 
 app.delete("/customer/:customer_id", async (req, res) => {
   const customer_id = req.params.customer_id;
