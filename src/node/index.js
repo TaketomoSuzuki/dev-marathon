@@ -97,25 +97,25 @@ app.post("/update-customer", async (req, res) => {
   }
 });
 
-
-// 案件登録API
 app.post('/case', async (req, res) => {
+  const { case_name, case_status, expected_revenue, representative, customer_id } = req.body;
+
+  // 入力チェック
+  if (!case_name || !case_status || !representative || !customer_id) {
+    return res.status(400).json({ success: false, error: '必須項目が不足しています' });
+  }
+
   try {
-    const { contact, case_name, case_status, expected_revenue, representative } = req.body;
-
-    const customerResult = await pool.query(
-      'SELECT customer_id FROM customers WHERE contact = $1',
-      [contact]
+    // 顧客IDの存在確認（任意：安全性向上のため）
+    const customerCheck = await pool.query(
+      'SELECT customer_id FROM customers WHERE customer_id = $1',
+      [customer_id]
     );
-
-    if (!customerResult.rows.length || !customerResult.rows[0].customer_id) {
-      console.warn('顧客が見つかりません:', contact);
-      return res.status(404).json({ success: false, error: '顧客が見つかりません' });
+    if (customerCheck.rows.length === 0) {
+      return res.status(404).json({ success: false, error: '指定された顧客が存在しません' });
     }
 
-    const customer_id = customerResult.rows[0].customer_id;
-    console.log('取得した customer_id:', customer_id);
-
+    // 案件登録
     const result = await pool.query(
       `INSERT INTO cases (case_name, case_status, expected_revenue, representative, customer_id)
        VALUES ($1, $2, $3, $4, $5)
@@ -129,6 +129,7 @@ app.post('/case', async (req, res) => {
     res.status(500).json({ success: false, error: '案件登録に失敗しました' });
   }
 });
+
 
 
 

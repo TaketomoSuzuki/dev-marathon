@@ -43,7 +43,7 @@
       import config from '../config.js';
 
       const params = new URLSearchParams(window.location.search);
-      const contact = params.get('contact');
+      const customer_id = params.get('customer_id');
 
       document.getElementById('case-form').addEventListener('submit', e => {
         e.preventDefault();
@@ -53,7 +53,7 @@
           case_status: document.getElementById('case_status').value,
           expected_revenue: document.getElementById('expected_revenue').value || null,
           representative: document.getElementById('representative').value,
-          contact: contact
+          customer_id: customer_id
         };
 
         fetch(`${config.apiUrl}/case`, {
@@ -65,7 +65,7 @@
         .then(result => {
           if (result.success) {
             alert('案件を登録しました');
-            window.location.href = `detail.html?contact=${encodeURIComponent(contact)}`;
+            window.location.href = `detail.html?customer_id=${encodeURIComponent(customer_id)}`;
           } else {
             alert('登録に失敗しました');
           }
