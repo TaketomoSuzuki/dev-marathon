@@ -92,7 +92,7 @@ app.post("/update-customer", async (req, res) => {
   const { companyName, industry, contact, location, customer_id } = req.body;
   try {
     await pool.query(
-      "UPDATE customers SET company_name = $1, industry = $2, contact = $3 location = $4 WHERE customer_id = $5",
+      "UPDATE customers SET company_name = $1, industry = $2, contact = $3, location = $4 WHERE customer_id = $5",
       [companyName, industry, location, contact, customer_id]
     );
     res.json({ success: true });
