@@ -20,7 +20,7 @@
       const params = new URLSearchParams(window.location.search);
       const case_id = params.get('case_id');
 
-      fetch(`${config.apiUrl}/case/${encodeURIComponent(case_id)}`)
+      fetch(`${config.apiUrl}/cases/${encodeURIComponent(case_id)}`)
         .then(res => res.json())
         .then(data => {
           const table = document.getElementById('case-detail-table');
