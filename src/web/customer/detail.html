@@ -12,6 +12,13 @@
       <tbody id="detail-table"></tbody>
     </table>
 
+    <!-- 顧客操作ボタン -->
+    <div class="mt-4 d-flex gap-2 flex-wrap">
+      <a id="edit-link" class="btn btn-warning">顧客情報を編集</a>
+      <button id="delete-btn" class="btn btn-danger">顧客を削除</button>
+      <a id="add-case-link" class="btn btn-success">案件を登録</a>
+    </div>
+
     <h4 class="mt-5">登録された案件</h4>
     <table class="table table-striped">
       <thead>
@@ -20,16 +27,15 @@
           <th>ステータス</th>
           <th>予想売上</th>
           <th>担当者</th>
+          <th>操作</th>
         </tr>
       </thead>
       <tbody id="case-table-body"></tbody>
     </table>
 
-    <div class="mt-4 d-flex gap-2 flex-wrap">
+    <!-- 一覧に戻るボタン（右寄せ） -->
+    <div class="d-flex justify-content-end mt-4">
       <a href="list.html" class="btn btn-secondary">一覧に戻る</a>
-      <a id="edit-link" class="btn btn-warning">編集する</a>
-      <button id="delete-btn" class="btn btn-danger">削除する</button>
-      <a id="add-case-link" class="btn btn-success">案件を登録</a>
     </div>
   </div>
 
@@ -71,20 +77,20 @@
         const tbody = document.getElementById('case-table-body');
         if (cases.length === 0) {
           const row = document.createElement('tr');
-          row.innerHTML = `<td colspan="4">登録された案件はありません</td>`;
+          row.innerHTML = `<td colspan="5">登録された案件はありません</td>`;
           tbody.appendChild(row);
         } else {
           cases.forEach(item => {
             const row = document.createElement('tr');
             row.innerHTML = `
-              <td>
-                <a href="case_detail.html?case_id=${item.case_id}">${item.case_name}</a>
-                <a href="case_update.html?case_id=${item.case_id}" class="btn btn-sm btn-warning ml-2">編集</a>
-                <button class="btn btn-sm btn-danger ml-1 delete-case-btn" data-id="${item.case_id}">削除</button>
-              </td>
+              <td><a href="case_detail.html?case_id=${item.case_id}">${item.case_name}</a></td>
               <td>${item.case_status}</td>
               <td>${item.expected_revenue ?? '-'}</td>
               <td>${item.representative}</td>
+              <td>
+                <a href="case_update.html?case_id=${item.case_id}" class="btn btn-sm btn-warning mr-2">編集</a>
+                <button class="btn btn-sm btn-danger delete-case-btn" data-id="${item.case_id}">削除</button>
+              </td>
             `;
             tbody.appendChild(row);
           });
