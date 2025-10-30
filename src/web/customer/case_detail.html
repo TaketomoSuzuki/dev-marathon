@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <title>案件詳細</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  </head>
+  <body>
+    <div class="container mt-5">
+      <h2 class="mb-4">案件詳細</h2>
+      <table class="table table-bordered">
+        <tbody id="case-detail-table"></tbody>
+      </table>
+      <a href="javascript:history.back()" class="btn btn-secondary">戻る</a>
+    </div>
+
+    <script type="module">
+      import config from '../config.js';
+
+      const params = new URLSearchParams(window.location.search);
+      const case_id = params.get('case_id');
+
+      fetch(`${config.apiUrl}/case/${encodeURIComponent(case_id)}`)
+        .then(res => res.json())
+        .then(data => {
+          const table = document.getElementById('case-detail-table');
+          const fields = Object.entries(data);
+
+          fields.forEach(([key, value]) => {
+            const row = document.createElement('tr');
+            row.innerHTML = `<th>${key}</th><td>${value ?? '-'}</td>`;
+            table.appendChild(row);
+          });
+        })
+        .catch(err => {
+          console.error(err);
+          alert('案件詳細の取得に失敗しました');
+        });
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  </body>
+</html>
