@@ -135,6 +135,21 @@ app.post('/case', async (req, res) => {
   }
 });
 
+// 顧客IDに紐づく案件一覧を取得
+app.get('/cases/:customer_id', async (req, res) => {
+  const customer_id = req.params.customer_id;
+  try {
+    const result = await pool.query(
+      'SELECT case_id, case_name FROM cases WHERE customer_id = $1 ORDER BY created_at DESC',
+      [customer_id]
+    );
+    res.json(result.rows);
+  } catch (err) {
+    console.error('案件一覧取得エラー:', err);
+    res.status(500).json({ error: '案件一覧の取得に失敗しました' });
+  }
+});
+
 
 
 
