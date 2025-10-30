@@ -67,7 +67,7 @@
       });
 
       // 案件一覧を取得して表示
-      fetch(`${config.apiUrl}/cases/${encodeURIComponent(customer_id)}`)
+      fetch(`${config.apiUrl}/cases/${encodeURIComponent(case_id)}`)
       .then(res => res.json())
       .then(cases => {
         const tbody = document.getElementById('case-table-body');
@@ -79,7 +79,7 @@
           cases.forEach(item => {
           const row = document.createElement('tr');
           row.innerHTML = `
-            <td><a href="case_detail.html?customer_id=${item.customer_id}">${item.case_name}</a></td>
+            <td><a href="case_detail.html?case_id=${item.case_id}">${item.case_name}</a></td>
             <td>${item.case_status}</td>
             <td>${item.expected_revenue ?? '-'}</td>
             <td>${item.representative}</td>

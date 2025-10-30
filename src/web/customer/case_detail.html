@@ -18,9 +18,9 @@
       import config from '../config.js';
 
       const params = new URLSearchParams(window.location.search);
-      const customer_id = params.get('customer_id');
+      const case_id = params.get('case_id');
 
-      fetch(`${config.apiUrl}/case/${encodeURIComponent(customer_id)}`)
+      fetch(`${config.apiUrl}/case/${encodeURIComponent(case_id)}`)
         .then(res => res.json())
         .then(data => {
           const table = document.getElementById('case-detail-table');
