@@ -160,8 +160,7 @@ app.get('/case/:case_id', async (req, res) => {
     const result = await pool.query(
       `SELECT case_id, case_name, case_status, expected_revenue, representative
        FROM cases
-       WHERE customer_id = $1
-       ORDER BY case_id DESC`,
+       WHERE case_id = $1`,
       [case_id]
     );
     if (result.rows.length === 0) {
