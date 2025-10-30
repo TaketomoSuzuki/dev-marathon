@@ -155,10 +155,10 @@ app.get('/cases/:customer_id', async (req, res) => {
 
 // 案件IDで案件詳細を取得
 app.get('/case/:case_id', async (req, res) => {
-  const case_id = req.params.case_id;
+  const customer_id = req.params.customer_id;
   try {
     const result = await pool.query(
-      'SELECT * FROM cases WHERE case_id = $1',
+      'SELECT * FROM cases WHERE customer_id = $1',
       [case_id]
     );
     if (result.rows.length === 0) {
