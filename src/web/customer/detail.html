@@ -12,7 +12,17 @@
       <tbody id="detail-table"></tbody>
     </table>
     <h4 class="mt-5">登録された案件</h4>
-    <ul id="case-list" class="list-group"></ul>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>案件名</th>
+          <th>ステータス</th>
+          <th>予想売上</th>
+          <th>担当者</th>
+        </tr>
+      </thead>
+      <tbody id="case-table-body"></tbody>
+    </table>
     <a href="list.html" class="btn btn-secondary mt-4">一覧に戻る</a>
     <a id="edit-link" class="btn btn-warning ml-2">編集する</a>
     <button id="delete-btn" class="btn btn-danger ml-2">削除する</button>
@@ -60,24 +70,27 @@
       fetch(`${config.apiUrl}/cases/${encodeURIComponent(customer_id)}`)
       .then(res => res.json())
       .then(cases => {
-      const list = document.getElementById('case-list');
-      if (cases.length === 0) {
-      const li = document.createElement('li');
-      li.className = 'list-group-item';
-      li.textContent = '登録された案件はありません';
-      list.appendChild(li);
-      } else {
-      cases.forEach(item => {
-        const li = document.createElement('li');
-        li.className = 'list-group-item';
-        li.textContent = item.case_name;
-        list.appendChild(li);
+        const tbody = document.getElementById('case-table-body');
+        if (cases.length === 0) {
+          const row = document.createElement('tr');
+          row.innerHTML = `<td colspan="4">登録された案件はありません</td>`;
+          tbody.appendChild(row);
+        } else {
+          cases.forEach(item => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+              <td>${item.case_name}</td>
+              <td>${item.case_status}</td>
+              <td>${item.expected_revenue ?? '-'}</td>
+              <td>${item.representative}</td>
+            `;
+            tbody.appendChild(row);
+          });
+        }
+      })
+      .catch(err => {
+        console.error('案件一覧取得エラー:', err);
       });
-    }
-  })
-  .catch(err => {
-    console.error('案件一覧取得エラー:', err);
-  });
 
       // 削除ボタンの処理
     document.getElementById('delete-btn').addEventListener('click', () => {
