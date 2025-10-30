@@ -154,12 +154,12 @@ app.get('/cases/:customer_id', async (req, res) => {
 });
 
 // 案件IDで案件詳細を取得
-app.get('/case/:case_id', async (req, res) => {
+app.get('/case/:customer_id', async (req, res) => {
   const customer_id = req.params.customer_id;
   try {
     const result = await pool.query(
       'SELECT * FROM cases WHERE customer_id = $1',
-      [case_id]
+      [customer_id]
     );
     if (result.rows.length === 0) {
       return res.status(404).json({ error: '案件が見つかりません' });
