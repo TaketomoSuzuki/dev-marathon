@@ -173,7 +173,16 @@ app.get('/case/:case_id', async (req, res) => {
   }
 });
 
-
+app.delete('/case/:case_id', async (req, res) => {
+  const case_id = req.params.case_id;
+  try {
+    await pool.query('DELETE FROM cases WHERE case_id = $1', [case_id]);
+    res.json({ success: true });
+  } catch (err) {
+    console.error('案件削除エラー:', err);
+    res.status(500).json({ success: false, error: '案件削除に失敗しました' });
+  }
+});
 
 
 
