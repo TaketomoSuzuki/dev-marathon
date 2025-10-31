@@ -158,7 +158,7 @@ app.get('/case/:case_id', async (req, res) => {
   const case_id = req.params.case_id;
   try {
     const result = await pool.query(
-      `SELECT case_id, case_name, case_status, expected_revenue, representative
+      `SELECT *
        FROM cases
        WHERE case_id = $1`,
       [case_id]
