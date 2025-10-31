@@ -1,22 +1,66 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>案件情報入力</title>
-    <!-- Bootstrap CSSの読み込み -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>商談一覧</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 </head>
 <body>
-    <div class="container mt-5">
-        <!-- ここにHTMLを書く -->
-    </div>
-    <script type="module">
-        <!-- ここにJSを書く -->
-    </script>
-    <!-- BootstrapのJavaScriptの読み込み -->
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+  <div class="container mt-5">
+    <h2 class="mb-4">商談一覧</h2>
+    <table class="table table-bordered">
+      <thead class="thead-light">
+        <tr>
+          <th>商談日</th>
+          <th>確信度</th>
+          <th>商談内容</th>
+          <th>担当者ID</th>
+        </tr>
+      </thead>
+      <tbody id="negotiation-table-body">
+        <!-- 商談データがここに入る -->
+      </tbody>
+    </table>
+    <a href="#" id="back-link" class="btn btn-secondary">案件詳細に戻る</a>
+  </div>
+
+  <script type="module">
+    import config from '../config.js';
+
+    const params = new URLSearchParams(window.location.search);
+    const case_id = params.get('case_id');
+    document.getElementById('back-link').href = `case_detail.html?case_id=${encodeURIComponent(case_id)}`;
+
+    fetch(`${config.apiUrl}/negotiations/${encodeURIComponent(case_id)}`)
+      .then(res => res.json())
+      .then(data => {
+        const tbody = document.getElementById('negotiation-table-body');
+        if (data.length === 0) {
+          const row = document.createElement('tr');
+          row.innerHTML = `<td colspan="4" class="text-center text-muted">登録された商談はありません</td>`;
+          tbody.appendChild(row);
+        } else {
+          data.forEach(item => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+              <td>${item.negotiation_date}</td>
+              <td>${item.negotiation_confidence}</td>
+              <td>${item.negotiation_content}</td>
+              <td>${item.negotiation_representative}</td>
+            `;
+            tbody.appendChild(row);
+          });
+        }
+      })
+      .catch(err => {
+        console.error('商談一覧取得エラー:', err);
+        alert('商談一覧の取得に失敗しました');
+      });
+  </script>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

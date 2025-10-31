@@ -199,6 +199,78 @@ app.put('/case/:case_id', async (req, res) => {
 });
 
 
+// ここから下は商談系
 
+app.post('/negotiation', async (req, res) => {
+  const {
+    negotiation_date,
+    negotiation_confidence,
+    negotiation_content,
+    negotiation_representative,
+    case_id
+  } = req.body;
 
+  // 入力チェック（最低限）
+  if (
+    !negotiation_date ||
+    negotiation_confidence === undefined ||
+    !negotiation_content ||
+    !negotiation_representative ||
+    !case_id
+  ) {
+    return res.status(400).json({ success: false, error: '必須項目が不足しています' });
+  }
 
+  try {
+    // 案件IDの存在確認（任意）
+    const caseCheck = await pool.query(
+      'SELECT case_id FROM cases WHERE case_id = $1',
+      [case_id]
+    );
+    if (caseCheck.rows.length === 0) {
+      return res.status(404).json({ success: false, error: '指定された案件が存在しません' });
+    }
+
+    // 商談登録
+    const result = await pool.query(
+      `INSERT INTO negotiations (
+        negotiation_date,
+        negotiation_confidence,
+        negotiation_content,
+        negotiation_representative,
+        case_id
+      ) VALUES ($1, $2, $3, $4, $5)
+      RETURNING negotiation_id`,
+      [
+        negotiation_date,
+        negotiation_confidence,
+        negotiation_content,
+        negotiation_representative,
+        case_id
+      ]
+    );
+
+    res.json({ success: true, negotiation_id: result.rows[0].negotiation_id });
+  } catch (err) {
+    console.error('商談登録エラー:', err);
+    res.status(500).json({ success: false, error: '商談登録に失敗しました' });
+  }
+});
+
+// 商談情報の取得
+app.get('/negotiations/:case_id', async (req, res) => {
+  const case_id = req.params.case_id;
+  try {
+    const result = await pool.query(
+      `SELECT negotiation_date, negotiation_confidence, negotiation_content, negotiation_representative
+       FROM negotiations
+       WHERE case_id = $1
+       ORDER BY negotiation_date DESC`,
+      [case_id]
+    );
+    res.json(result.rows);
+  } catch (err) {
+    console.error('商談一覧取得エラー:', err);
+    res.status(500).json({ error: '商談一覧の取得に失敗しました' });
+  }
+});
