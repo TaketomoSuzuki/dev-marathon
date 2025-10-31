@@ -50,10 +50,10 @@
       .then(data => {
         const table = document.getElementById('detail-table');
         const fields = [
-          { label: 'Company_name', value: data.company_name },
-          { label: 'industry', value: data.industry },
-          { label: 'Contact', value: data.contact },
-          { label: 'location', value: data.location }
+          { label: '顧客名', value: data.company_name },
+          { label: '業種', value: data.industry },
+          { label: '電話番号', value: data.contact },
+          { label: '住所', value: data.location }
         ];
         fields.forEach(field => {
           const row = document.createElement('tr');

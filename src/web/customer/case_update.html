@@ -43,14 +43,18 @@
     const case_id = params.get('case_id');
 
     // 案件情報の取得
+    let customer_id = null;
+
     fetch(`${config.apiUrl}/case/${encodeURIComponent(case_id)}`)
     .then(res => res.json())
     .then(data => {
-        document.getElementById('case_name').value = data.case_name;
-        document.getElementById('case_status').value = data.case_status;
-        document.getElementById('expected_revenue').value = data.expected_revenue;
-        document.getElementById('representative').value = data.representative;
-    })
+    document.getElementById('case_name').value = data.case_name;
+    document.getElementById('case_status').value = data.case_status;
+    document.getElementById('expected_revenue').value = data.expected_revenue;
+    document.getElementById('representative').value = data.representative;
+
+    customer_id = data.customer_id; // ← ここで保存
+  })
     .catch(err => {
         console.error('案件情報取得エラー:', err);
         alert('案件情報の取得に失敗しました。');
@@ -76,9 +80,9 @@
         })
         .then(res => res.json())
         .then(result => {
-            if (result.success) {
+            if (result.success) {            
             alert('案件情報を更新しました');
-            window.location.href = `case_detail.html?case_id=${case_id}`;
+            window.location.href = `detail.html?customer_id=${encodeURIComponent(customer_id)}`;
             } else {
             alert('更新に失敗しました');
             }
