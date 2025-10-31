@@ -15,10 +15,6 @@
           <input type="text" class="form-control" id="case_name" required />
         </div>
         <div class="form-group">
-          <label for="description">案件内容</label>
-          <textarea class="form-control" id="description" rows="3" required></textarea>
-        </div>
-        <div class="form-group">
           <label for="case_status">ステータス</label>
           <select class="form-control" id="case_status" required>
             <option value="新規">新規</option>
@@ -50,7 +46,6 @@
 
         const payload = {
           case_name: document.getElementById('case_name').value,
-          description: document.getElementById('description').value,
           case_status: document.getElementById('case_status').value,
           expected_revenue: document.getElementById('expected_revenue').value || null,
           representative: document.getElementById('representative').value,
