@@ -33,7 +33,7 @@
           <input type="text" class="form-control" id="representative" required />
         </div>
         <button type="submit" class="btn btn-primary">登録</button>
-        <a href="detail.html" class="btn btn-secondary ">一覧に戻る</a>
+        <a href="javascript:history.back()" class="btn btn-secondary">戻る</a>
       </form>
     </div>
     <script type="module">
@@ -41,6 +41,8 @@
 
     const params = new URLSearchParams(window.location.search);
     const case_id = params.get('case_id');
+
+    let customer_id = null; 
 
     // 案件情報の取得
     fetch(`${config.apiUrl}/case/${encodeURIComponent(case_id)}`)
@@ -50,6 +52,8 @@
         document.getElementById('case_status').value = data.case_status;
         document.getElementById('expected_revenue').value = data.expected_revenue;
         document.getElementById('representative').value = data.representative;
+
+        customer_id = data.customer_id; 
     })
     .catch(err => {
         console.error('案件情報取得エラー:', err);
@@ -78,7 +82,7 @@
         .then(result => {
             if (result.success) {
             alert('案件情報を更新しました');
-            window.location.href = `detail.html?case_id=${case_id}`;
+            window.location.href = `detail.html?customer_id=${encodeURIComponent(customer_id)}`;
             } else {
             alert('更新に失敗しました');
             }
