@@ -33,6 +33,7 @@
           <input type="text" class="form-control" id="representative" required />
         </div>
         <button type="submit" class="btn btn-primary">登録</button>
+        <a href="detail.html" class="btn btn-secondary ">一覧に戻る</a>
       </form>
     </div>
     <script type="module">
@@ -77,7 +78,7 @@
         .then(result => {
             if (result.success) {
             alert('案件情報を更新しました');
-            window.location.href = `case_detail.html?case_id=${case_id}`;
+            window.location.href = `detail.html?case_id=${case_id}`;
             } else {
             alert('更新に失敗しました');
             }
