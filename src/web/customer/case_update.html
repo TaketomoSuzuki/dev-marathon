@@ -42,8 +42,6 @@
     const params = new URLSearchParams(window.location.search);
     const case_id = params.get('case_id');
 
-    let customer_id = null; 
-
     // 案件情報の取得
     fetch(`${config.apiUrl}/case/${encodeURIComponent(case_id)}`)
     .then(res => res.json())
@@ -52,8 +50,6 @@
         document.getElementById('case_status').value = data.case_status;
         document.getElementById('expected_revenue').value = data.expected_revenue;
         document.getElementById('representative').value = data.representative;
-
-        customer_id = data.customer_id; 
     })
     .catch(err => {
         console.error('案件情報取得エラー:', err);
@@ -82,7 +78,7 @@
         .then(result => {
             if (result.success) {
             alert('案件情報を更新しました');
-            window.location.href = `detail.html?customer_id=${encodeURIComponent(customer_id)}`;
+            window.location.href = `detail.html?case_id=${case_id}`;
             } else {
             alert('更新に失敗しました');
             }
