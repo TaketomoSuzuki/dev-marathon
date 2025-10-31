@@ -184,6 +184,20 @@ app.delete('/case/:case_id', async (req, res) => {
   }
 });
 
+app.put('/case/:case_id', async (req, res) => {
+  const case_id = req.params.case_id;
+  const { case_name, description, case_status, expected_revenue, representative } = req.body;
+  try {
+    await pool.query(
+      'UPDATE cases SET case_name = $1, description = $2, case_status = $3, expected_revenue = $4, representative = $5 WHERE case_id = $6',
+      [case_name, description, case_status, expected_revenue, representative, case_id]
+    );
+    res.json({ success: true });
+  } catch (err) {
+    console.error('案件更新エラー:', err);
+    res.status(500).json({ success: false });
+  }
+});
 
 
 
