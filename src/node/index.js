@@ -142,8 +142,7 @@ app.get('/cases/:customer_id', async (req, res) => {
     const result = await pool.query(
       `SELECT case_id, description, case_name, case_status, expected_revenue, representative
        FROM cases
-       WHERE customer_id = $1
-       ORDER BY created_date DESC`,
+       WHERE customer_id = $1`,
       [customer_id]
     );
     res.json(result.rows);
